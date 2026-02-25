@@ -3,6 +3,8 @@ package edu.oregonstate.cs492.roomgithubsearch.data
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GitHubRepoDao {
@@ -11,4 +13,7 @@ interface GitHubRepoDao {
 
     @Delete
     suspend fun delete(repo: GitHubRepo)
+
+    @Query("SELECT * FROM GitHubRepo")
+    fun getAllRepos(): Flow<List<GitHubRepo>>
 }

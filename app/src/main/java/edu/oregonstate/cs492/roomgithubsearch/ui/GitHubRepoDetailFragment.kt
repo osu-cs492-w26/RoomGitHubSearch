@@ -17,8 +17,10 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import edu.oregonstate.cs492.roomgithubsearch.R
 import androidx.core.net.toUri
+import androidx.fragment.app.viewModels
 
 class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) {
+    private val viewModel: BookmarkedReposViewModel by viewModels()
     private val args: GitHubRepoDetailFragmentArgs by navArgs()
     private var isBookmarked = false
 
@@ -72,12 +74,14 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
         menuItem.isChecked = isBookmarked
         when (isBookmarked) {
             true -> {
+                viewModel.addBookmarkedRepo(args.repo)
                 menuItem.icon = AppCompatResources.getDrawable(
                     requireContext(),
                     R.drawable.ic_action_bookmark_on
                 )
             }
             false -> {
+                viewModel.removeBookmarkedRepo(args.repo)
                 menuItem.icon = AppCompatResources.getDrawable(
                     requireContext(),
                     R.drawable.ic_action_bookmark_off

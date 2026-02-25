@@ -1,0 +1,32 @@
+package edu.oregonstate.cs492.roomgithubsearch.ui
+
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import edu.oregonstate.cs492.roomgithubsearch.data.AppDatabase
+import edu.oregonstate.cs492.roomgithubsearch.data.BookmarkedReposRepository
+import edu.oregonstate.cs492.roomgithubsearch.data.GitHubRepo
+import kotlinx.coroutines.launch
+
+class BookmarkedReposViewModel(application: Application) :
+    AndroidViewModel(application)
+{
+    private val repository = BookmarkedReposRepository(
+        AppDatabase.getInstance(application).gitHubRepoDao()
+    )
+
+    val bookmarkedRepos = repository.getAllBookmarkedRepos().asLiveData()
+
+    fun addBookmarkedRepo(repo: GitHubRepo) {
+        viewModelScope.launch {
+            repository.insertBookmarkedRepo(repo)
+        }
+    }
+
+    fun removeBookmarkedRepo(repo: GitHubRepo) {
+        viewModelScope.launch {
+            repository.deleteBookmarkedRepo(repo)
+        }
+    }
+}
