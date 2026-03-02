@@ -82,27 +82,27 @@ class GitHubSearchFragment : Fragment(R.layout.fragment_github_search) {
             }
         }
 
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(
-            object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.github_search_menu, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.action_bookmarks -> {
-                            val directions = GitHubSearchFragmentDirections.navigateToBookmarkedRepos()
-                            findNavController().navigate(directions)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            },
-            viewLifecycleOwner,
-            Lifecycle.State.STARTED
-        )
+//        val menuHost: MenuHost = requireActivity()
+//        menuHost.addMenuProvider(
+//            object : MenuProvider {
+//                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                    menuInflater.inflate(R.menu.github_search_menu, menu)
+//                }
+//
+//                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+//                    return when (menuItem.itemId) {
+//                        R.id.action_bookmarks -> {
+//                            val directions = GitHubSearchFragmentDirections.navigateToBookmarkedRepos()
+//                            findNavController().navigate(directions)
+//                            true
+//                        }
+//                        else -> false
+//                    }
+//                }
+//            },
+//            viewLifecycleOwner,
+//            Lifecycle.State.STARTED
+//        )
 
         val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
         searchBtn.setOnClickListener {
