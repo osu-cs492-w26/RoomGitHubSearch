@@ -18,6 +18,8 @@ import com.google.android.material.snackbar.Snackbar
 import edu.oregonstate.cs492.roomgithubsearch.R
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import edu.oregonstate.cs492.roomgithubsearch.data.GitHubRepo
 
 class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) {
     private val viewModel: BookmarkedReposViewModel by viewModels()
@@ -36,12 +38,35 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
         repoDescriptionTV.text = args.repo.description
 
         var bookmarkMenuItem: MenuItem? = null
+        val bookmarkObserver = Observer<GitHubRepo?> { bookmarkedRepo ->
+            when (bookmarkedRepo) {
+                null -> {
+                    isBookmarked = false
+                    bookmarkMenuItem?.isChecked = false
+                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_action_bookmark_off
+                    )
+                }
+                else -> {
+                    isBookmarked = true
+                    bookmarkMenuItem?.isChecked = true
+                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_action_bookmark_on
+                    )
+                }
+            }
+        }
+
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.github_repo_detail_menu, menu)
                     bookmarkMenuItem = menu.findItem(R.id.action_bookmark)
+                    viewModel.getBookmarkedRepoByName(args.repo.name)
+                        .observe(viewLifecycleOwner, bookmarkObserver)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -65,27 +90,6 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
             viewLifecycleOwner,
             Lifecycle.State.STARTED
         )
-
-        viewModel.getBookmarkedRepoByName(args.repo.name).observe(viewLifecycleOwner) { bookmarkedRepo ->
-            when (bookmarkedRepo) {
-                null -> {
-                    isBookmarked = false
-                    bookmarkMenuItem?.isChecked = false
-                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_action_bookmark_off
-                    )
-                }
-                else -> {
-                    isBookmarked = true
-                    bookmarkMenuItem?.isChecked = true
-                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_action_bookmark_on
-                    )
-                }
-            }
-        }
     }
 
     /**
