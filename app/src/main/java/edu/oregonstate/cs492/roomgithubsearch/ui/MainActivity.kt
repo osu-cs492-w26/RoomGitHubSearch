@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.main)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment
