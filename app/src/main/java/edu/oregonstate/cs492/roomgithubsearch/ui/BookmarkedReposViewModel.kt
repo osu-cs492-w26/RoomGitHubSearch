@@ -29,4 +29,6 @@ class BookmarkedReposViewModel(application: Application) :
             repository.deleteBookmarkedRepo(repo)
         }
     }
+
+    fun getBookmarkedRepoByName(name: String) = repository.getBookmarkedRepoByName(name).asLiveData()
 }

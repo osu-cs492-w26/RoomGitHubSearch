@@ -10,4 +10,6 @@ class BookmarkedReposRepository(
         dao.delete(repo)
 
     fun getAllBookmarkedRepos() = dao.getAllRepos()
+
+    fun getBookmarkedRepoByName(name: String) = dao.getRepoByName(name)
 }

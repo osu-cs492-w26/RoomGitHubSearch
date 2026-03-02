@@ -35,11 +35,13 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
         repoStarsTV.text = args.repo.stars.toString()
         repoDescriptionTV.text = args.repo.description
 
+        var bookmarkMenuItem: MenuItem? = null
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.github_repo_detail_menu, menu)
+                    bookmarkMenuItem = menu.findItem(R.id.action_bookmark)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -63,6 +65,27 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
             viewLifecycleOwner,
             Lifecycle.State.STARTED
         )
+
+        viewModel.getBookmarkedRepoByName(args.repo.name).observe(viewLifecycleOwner) { bookmarkedRepo ->
+            when (bookmarkedRepo) {
+                null -> {
+                    isBookmarked = false
+                    bookmarkMenuItem?.isChecked = false
+                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_action_bookmark_off
+                    )
+                }
+                else -> {
+                    isBookmarked = true
+                    bookmarkMenuItem?.isChecked = true
+                    bookmarkMenuItem?.icon = AppCompatResources.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_action_bookmark_on
+                    )
+                }
+            }
+        }
     }
 
     /**
@@ -70,22 +93,12 @@ class GitHubRepoDetailFragment : Fragment(R.layout.fragment_github_repo_detail) 
      * clicks it.
      */
     private fun toggleRepoBookmark(menuItem: MenuItem) {
-        isBookmarked = !isBookmarked
-        menuItem.isChecked = isBookmarked
-        when (isBookmarked) {
+        when (!isBookmarked) {
             true -> {
                 viewModel.addBookmarkedRepo(args.repo)
-                menuItem.icon = AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_action_bookmark_on
-                )
             }
             false -> {
                 viewModel.removeBookmarkedRepo(args.repo)
-                menuItem.icon = AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_action_bookmark_off
-                )
             }
         }
     }

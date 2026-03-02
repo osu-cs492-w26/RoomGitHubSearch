@@ -16,4 +16,7 @@ interface GitHubRepoDao {
 
     @Query("SELECT * FROM GitHubRepo")
     fun getAllRepos(): Flow<List<GitHubRepo>>
+
+    @Query("SELECT * FROM GitHubRepo WHERE name = :name LIMIT 1")
+    fun getRepoByName(name: String): Flow<GitHubRepo?>
 }
